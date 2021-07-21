@@ -1,4 +1,5 @@
 {
     "server_ip":"localhost",
-    "server_port":5000
+    "server_port":5000,
+    "memory_log_directory":"datastore"
 }

@@ -7,7 +7,7 @@ from flask import Flask, render_template, jsonify
 from flask.globals import request
 from flask_socketio import SocketIO, emit
 from uuid import uuid4
-
+import sys
 import requests
 import cachehelper
 import socketIO_client
@@ -55,6 +55,28 @@ def saveResponse(id):
     json_data = request.get_json()
     CACHE.setCacheJson(id, json_data)
     return 'OK', 200
+
+@app.route('/api/<vm_name>/startMonitoring',methods=['POST'])
+def startMonitoring(vm_name):
+    id = str(uuid4())
+    json_d = request.get_json()
+    try:
+        assert(json_d.get('process_name') != None)
+        assert(json_d.get('polling_interval') != None)
+        assert(json_d.get('latest') != None)
+    except:
+        return "error: "+sys.exc_info() , 400
+    msg = dict(message_frame)
+    msg["action"] = "START_MONITORING"
+    msg['id'] = id
+    msg['params']=json_d
+    socketio.emit(vm_name, json.dumps(msg))
+    response = CACHE.getCachedJsonWithRetry(id , 10)
+    return jsonify({
+        "id":id,
+        "status": response['status'],
+        "payload": response['payload']  
+    })
 
 
 @app.route('/sendcustomEvent', methods=['GET'])
