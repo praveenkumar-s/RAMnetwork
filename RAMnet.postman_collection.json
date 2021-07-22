@@ -1,0 +1,90 @@
+{
+	"info": {
+		"_postman_id": "3e9b3aa1-032c-47ba-b685-f6f8bbda211e",
+		"name": "RAMnet",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get List of Process from client",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{serverHost}}:5000/api/Praveens-MacBook-Air.local/listProcess",
+					"protocol": "http",
+					"host": [
+						"{{serverHost}}"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"Praveens-MacBook-Air.local",
+						"listProcess"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Stop Memory Monitoring",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n \"id\":\"fc9bf9b6-064c-442d-a174-03c1d014137b\",\n \"process_id\":3540\n\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{serverHost}}:5000/api/Praveens-MacBook-Air.local/stopMonitoring",
+					"protocol": "http",
+					"host": [
+						"{{serverHost}}"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"Praveens-MacBook-Air.local",
+						"stopMonitoring"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Start Memory Monitoring",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"process_name\":\"chrome\",\n    \"polling_interval\":60,\n    \"latest\":true\n\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{serverHost}}:5000/api/Praveens-MacBook-Air.local/startMonitoring",
+					"protocol": "http",
+					"host": [
+						"{{serverHost}}"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"Praveens-MacBook-Air.local",
+						"startMonitoring"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
