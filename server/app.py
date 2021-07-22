@@ -49,6 +49,8 @@ def getProcessList(vm_name):
     msg['id'] = id
     socketio.emit(vm_name, json.dumps(msg))
     process_list = CACHE.getCachedJsonWithRetry(id, 10)
+    if(process_list is None):
+        return "client not found or not running",404
     return jsonify(process_list)
 
 
