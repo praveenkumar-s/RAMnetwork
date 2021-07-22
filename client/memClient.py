@@ -7,11 +7,12 @@ import json
 import actionFactory
 import serverComms
 import logging
+import configuration
 
 # standard Python
 sio = socketio.Client()
 hostname = socket.gethostname()
-CONFIG = json.load(open('client_config.json','r'), object_hook=utils.customJsonDecoder)
+CONFIG = configuration.CONFIG
 server_ip= CONFIG.server_ip
 server_port= CONFIG.server_port
 server= 'http://{0}:{1}'.format(server_ip,str(server_port))

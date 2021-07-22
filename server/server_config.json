@@ -4,5 +4,6 @@
     "redis_cache":{
         "server":"192.168.88.219",
         "port":6379
-    }   
+    } ,
+    "datastore": "datastore"
 }

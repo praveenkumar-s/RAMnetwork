@@ -10,6 +10,10 @@ from collections import namedtuple
 from subprocess import Popen
 import logging
 import sys
+import requests
+import configuration
+
+CONFIG = configuration.CONFIG
 
 def clear():  
     if name == 'nt':
@@ -64,18 +68,6 @@ def customJsonDecoder(dictVar):
 
 def start_monitoring(process_id , id , polling_interval):
     CONFIG = json.load(open('client_config.json'))
-    # cmd_str=[
-    #     "python",
-    #     "memory_monitoring_thread.py",
-    #     "-p",
-    #     str(process_id),
-    #     "-i",
-    #     id,
-    #     "-d",
-    #     CONFIG['memory_log_directory'],
-    #     "-t",
-    #     str(polling_interval)
-    # ]
     cmd_str = 'python memory_monitoring_thread.py -p {0} -i {1} -d {2} -t {3}'.format(process_id, id , CONFIG['memory_log_directory'] ,polling_interval )
     
     logging.info("Executing Command : "+ str(cmd_str) )
@@ -87,3 +79,25 @@ def start_monitoring(process_id , id , polling_interval):
         logging.error("Error Occurred "+ str(e))
         raise e
     return proc.pid
+
+def kill_process(pid):
+    try:
+        process = psutil.Process(int(pid))
+    except:
+        logging.error("Unable to find processId {0} to terminate ".format(str(pid)))
+    process.terminate()
+    return 0
+
+def persist_to_server(id, url ):
+    file_path = path.join(CONFIG.memory_log_directory , id+'.json')
+    if(path.exists(file_path)):
+        payload_data = json.load(open(file_path,'r'))
+        response = requests.post(url , json= payload_data)
+        if(response.status_code==200):
+            return True
+        else:
+            logging.error("Server Error: response code: " +  response.status_code)
+            raise Exception("Server Error: response code: " +  response.status_code)
+    else:
+        logging.error("Unable to find the given file: "+ file_path )
+        raise Exception("Unable to find memory Snapshot on client")

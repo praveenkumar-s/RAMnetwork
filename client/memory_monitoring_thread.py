@@ -42,7 +42,7 @@ if __name__ == "__main__":
     while True:
         try:
             memory_usage = process.memory_info()
-            memory_footPrint.append([datetime.utcnow().strftime("%m/%d/%Y, %H:%M:%S") , memory_usage[0]])
+            memory_footPrint.append([datetime.utcnow().strftime("%m/%d/%Y %H:%M:%S") , memory_usage[0]])
         except:
             json.dump(memory_footPrint , open(file_name , 'w+'))
             exit()
