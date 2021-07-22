@@ -1,6 +1,6 @@
 {
     "bind_host":"localhost",
-    "bind_port":5000,
+    "bind_port":5001,
     "redis_cache":{
         "server":"192.168.88.219",
         "port":6379
