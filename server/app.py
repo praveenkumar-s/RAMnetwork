@@ -1,5 +1,5 @@
 import json
-from os import confstr, name, environ, path
+from os import path
 import re
 from requests.sessions import Request
 import utils

@@ -1,4 +1,4 @@
-from os import confstr
+from os import path
 import socketio
 import socket
 import utils
