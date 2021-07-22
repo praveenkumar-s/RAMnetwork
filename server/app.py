@@ -145,6 +145,6 @@ def datastoreUI(id):
         js = json.load(open(fileName))    
     else:
         return "file not found",404
-    return render_template('result.html',tool_name='this',tm_data=js)
+    return render_template('result.html',tool_name="{0} | {1}".format(js["hostname"] ,js["process_name"]),tm_data=js["memory_usage"])
 if __name__ == '__main__':
     socketio.run(app,  host=CONFIG.bind_host, port=CONFIG.bind_port)

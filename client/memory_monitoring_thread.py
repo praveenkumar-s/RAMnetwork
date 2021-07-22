@@ -5,6 +5,7 @@ import psutil
 import time
 from datetime import date, datetime, timedelta
 import json
+import socket
 
 
 
@@ -29,10 +30,16 @@ if __name__ == "__main__":
     outputDirectory = args.get('outputDir')
     pollingInterval = int(args.get("timeInterval",60))
     file_name = os.path.join(outputDirectory,id+'.json')
-    memory_footPrint = []
+    
+    memory_footPrint = {
+        "hostname":socket.gethostname(),
+        "process_name":None,
+        "memory_usage":[]
+        }
     last_updated_time = None
     try:
         process = psutil.Process(int(processId))
+        memory_footPrint["process_name"]= process.name()
         json.dump(memory_footPrint , open(file_name , 'w+'))
         last_updated_time = datetime.utcnow()
     except:
@@ -42,7 +49,7 @@ if __name__ == "__main__":
     while True:
         try:
             memory_usage = process.memory_info()
-            memory_footPrint.append([datetime.utcnow().strftime("%m/%d/%Y %H:%M:%S") , memory_usage[0]])
+            memory_footPrint["memory_usage"].append([datetime.utcnow().strftime("%m/%d/%Y %H:%M:%S") , memory_usage[0]])
         except:
             json.dump(memory_footPrint , open(file_name , 'w+'))
             exit()
