@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Memory Profiling Visualizer</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+    <script>
+        $(function () {
+            $(".dtpick").datepicker();
+        });
+    </script>
+    <style type="text/css">
+        .bs-example {
+            margin: 20px;
+        }
+    </style>
+    <script src="{{ url_for('static', filename='js/static_Chart.min.js') }}"></script>
+</head>
+
+<body>
+    <div class="bs-example">
+        <nav class="navbar navbar-expand-md navbar-light bg-light">
+            <a href="/" class="navbar-brand">
+                <img src="{{ url_for('static', filename='images/KLA.png') }}" height="28" alt="CoolBrand">
+            </a>
+            <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <h3 class="logo">Memory Report Visualizer</h3>
+
+
+        </nav>
+    </div>
+    <h4><a href="/">Home</a>><a href="#">{{tool_name}}</a></h4>
+    <hr>
+
+
+
+
+
+
+
+    <div class="container">
+        <canvas id="myChart" width="800" height="600" left=50%></canvas>
+
+    </div>
+    <script>
+        // Global parameters:
+        // do not resize the chart canvas when its container does (keep at 600x400px)
+        Chart.defaults.global.responsive = false;
+
+        // define the chart data
+        var chartData = {
+            labels: [{% for item in tm_data %}
+        "{{item[0].__str__()}}",
+            {% endfor %}],
+        datasets: [{
+            label: 'Memory Used by Process ID {{selected}} in  MegaBytes',
+            fill: true,
+            lineTension: 0.1,
+            backgroundColor: "rgba(75,192,192,0.4)",
+            borderColor: "rgba(75,192,192,1)",
+            borderCapStyle: 'butt',
+            borderDash: [],
+            borderDashOffset: 0.0,
+            borderJoinStyle: 'miter',
+            pointBorderColor: "rgba(75,192,192,1)",
+            pointBackgroundColor: "#fff",
+            pointBorderWidth: 1,
+            pointHoverRadius: 5,
+            pointHoverBackgroundColor: "rgba(75,192,192,1)",
+            pointHoverBorderColor: "rgba(220,220,220,1)",
+            pointHoverBorderWidth: 2,
+            pointRadius: 1,
+            pointHitRadius: 10,
+            data: [{% for item in tm_data %}
+                                    {{ item[1]/1048576}},
+        {% endfor %}],
+            spanGaps: false
+                      }]
+                    }
+
+        // get chart canvas
+        var ctx = document.getElementById("myChart").getContext("2d");
+
+        // create the chart using the chart canvas
+        var myChart = new Chart(ctx, {
+            type: 'line',
+            data: chartData,
+        });
+    </script>
+
+
+
+</body>
+
+</html>

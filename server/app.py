@@ -137,7 +137,14 @@ def datastore(id):
     fileName = path.join(CONFIG.datastore , id+'.json')
     json.dump(json_data , open(fileName , 'w+'))
     return 'OK',200
-    
 
+@app.route('/ui/datastore/<id>', methods=['GET'])
+def datastoreUI(id):
+    fileName = path.join(CONFIG.datastore , id+'.json')
+    if(path.exists(fileName)):
+        js = json.load(open(fileName))    
+    else:
+        return "file not found",404
+    return render_template('result.html',tool_name='this',tm_data=js)
 if __name__ == '__main__':
     socketio.run(app,  host=CONFIG.bind_host, port=CONFIG.bind_port)
