@@ -1,0 +1,5 @@
+{
+    "server_ip":"orch-production",
+    "server_port":5001,
+    "memory_log_directory":"datastore"
+}

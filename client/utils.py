@@ -12,6 +12,7 @@ import logging
 import sys
 import requests
 import configuration
+import os
 
 CONFIG = configuration.CONFIG
 
@@ -68,12 +69,16 @@ def customJsonDecoder(dictVar):
 
 def start_monitoring(process_id , id , polling_interval):
     CONFIG = json.load(open('client_config.json'))
-    cmd_str = 'python memory_monitoring_thread.py -p {0} -i {1} -d {2} -t {3}'.format(process_id, id , CONFIG['memory_log_directory'] ,polling_interval )
+    if(path.abspath(__file__).endswith('.exe')):
+        cmd_str = 'memory_monitoring_thread.exe -p {0} -i {1} -d {2} -t {3}'.format(process_id , id , CONFIG['memory_log_directory'], polling_interval)
+    else:
+        cmd_str = 'python memory_monitoring_thread.py -p {0} -i {1} -d {2} -t {3}'.format(process_id, id , CONFIG['memory_log_directory'] ,polling_interval )   
     
     logging.info("Executing Command : "+ str(cmd_str) )
     try:
-        proc = subprocess.Popen(cmd_str, shell=True,
-                stdin=None, stdout=None, stderr=None, close_fds=True ,cwd= path.dirname(path.abspath(__file__)))
+        # proc = subprocess.Popen(cmd_str, shell=True,
+        #         stdin=None, stdout=None, stderr=None, close_fds=True ,cwd= path.dirname(path.abspath(__file__)))
+        proc = subprocess.Popen(cmd_str, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, stdin=subprocess.PIPE)
         logging.info("Process started successfully .."+ str(proc.pid))
     except Exception as e :
         logging.error("Error Occurred "+ str(e))

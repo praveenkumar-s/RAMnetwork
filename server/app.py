@@ -43,6 +43,7 @@ def sendjson(topic):
 
 @app.route('/api/<vm_name>/listProcess', methods=['GET'])
 def getProcessList(vm_name):
+    vm_name = vm_name.lower()
     id = str(uuid4())
     msg = dict(message_frame)
     msg["action"] = "GET_PROCESS_LIST"
@@ -62,6 +63,7 @@ def saveResponse(id):
 
 @app.route('/api/<vm_name>/startMonitoring',methods=['POST'])
 def startMonitoring(vm_name):
+    vm_name = vm_name.lower()
     id = str(uuid4())
     json_d = request.get_json()
     try:
@@ -84,6 +86,7 @@ def startMonitoring(vm_name):
 
 @app.route('/api/<vm_name>/stopMonitoring', methods=['POST'])
 def stopMonitoring(vm_name):
+    vm_name = vm_name.lower()
     json_data = request.get_json()
     try:
         assert(json_data.get('id') != None)

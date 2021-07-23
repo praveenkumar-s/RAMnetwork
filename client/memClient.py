@@ -11,7 +11,7 @@ import configuration
 
 # standard Python
 sio = socketio.Client()
-hostname = socket.gethostname()
+hostname = socket.gethostname().lower()
 CONFIG = configuration.CONFIG
 server_ip= CONFIG.server_ip
 server_port= CONFIG.server_port
