@@ -1,26 +1,26 @@
-#Distributed Memory monitoring
+# Distributed Memory monitoring
 Start and stop logging memory used by a specific process(s) on a remote machine by interacting with a central API. Handy tool to monitor Apps for Memory Leaks
 
-#####Note: 🚨 🚧 🚧 This project is work in progress 🚧 🚧 🚨
+##### Note: 🚨 🚧 🚧 This project is work in progress 🚧 🚧 🚨
 
-###Uses:
+### Uses:
 * In a multi processing distributed system, tracking process memory on each machine / node can be hard 
 * Turbocharge your CI/CD pipelines to start monitoring memory used by your jobs and actions
 * Store memory trends on a central location and visualize them using a web-ui
 
-##Installation and Usage:
+## Installation and Usage:
 
-##Server:
+## Server:
     Copy the contents of the server folder to a local machine. 
-####Docker: 
+#### Docker: 
     docker build -t memoryMonitorServer . 
     docker run -d --name memoryMonitorServer -p 5001:5001 memoryMonitorServer
 
-####Metal:
+#### Metal:
     python -m pip install -r requirements.txt
     python app.py
 
-###Server Configurations:
+### Server Configurations:
 Server side configurations are controlled by `server_config.json`
 ```
 {
@@ -36,25 +36,25 @@ Server side configurations are controlled by `server_config.json`
 
 Redis server installation and configuration can be found at : https://docs.redislabs.com/latest/rc/
 
-###API Documentation: 
+### API Documentation: 
     https://documenter.getpostman.com/view/1523598/TzsZqnq4
 
 
-##Client
+## Client
 Clients are executables that are always running on the nodes that we want to track. The client must be installed to start on start-up of system
 
-###Portable Installation (Windows):
+### Portable Installation (Windows):
 Copy the Contents of /client_windows_x86 in to a local folder and start client by : `memClient.exe`
 
-###Universal Install ( Windows / Linux / Unix ):
+### Universal Install ( Windows / Linux / Unix ):
 Copy the contents of `client` folder in to a local directory
 `python -m pip install -r requirements.txt`
 `python memClient.py`
 
-###Client startup: 
+### Client startup: 
 ![Alt text](documentation/clientStartup.png?raw=true "Client Startup ")
 
-###Client configurations:
+### Client configurations:
 ```
 {
     "server_ip":"192.168.88.219",      --> IP of the Memory Monitoring Server
@@ -64,11 +64,11 @@ Copy the contents of `client` folder in to a local directory
 ```
 
 
-###WebUI
+### WebUI
 The Web UI for visualizing a memory snapshot: 
 `http://hostname:port/ui/datastore/<id of snapshot>`
 
 To view a demo visualization: `http://hostname:port/ui/datastore/demo`
 
-###Client startup: 
+### Client startup: 
 ![Alt text](documentation/DemoImage.png?raw=true "Client WebUI Demo Image ")
