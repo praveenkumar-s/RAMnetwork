@@ -112,6 +112,13 @@ def stopMonitoring(vm_name):
             "msg":"Pre-requesite evaluation Failed: " + json.dumps(monitoring_details)
         }), 500
 
+@app.route('/api/<id>/stats', methods=['GET'])
+def getStats(id):
+    fileName = path.join(CONFIG.datastore , id+'.json')
+    if(not path.exists(fileName)):
+        return "given id: {0} is not found".format(id), 404
+    return jsonify( utils.getStats(fileName) )
+
 @app.route('/sendcustomEvent', methods=['GET'])
 def sendnew():
     q = request.args.get('event')
