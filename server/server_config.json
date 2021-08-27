@@ -2,7 +2,7 @@
     "bind_host":"0.0.0.0",
     "bind_port":5001,
     "redis_cache":{
-        "server":"192.168.88.219",
+        "server":"orch-production",
         "port":6379
     } ,
     "datastore": "datastore"
