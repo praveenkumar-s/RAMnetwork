@@ -25,3 +25,18 @@ def getStats(filePath):
         }
     }
     return out
+
+
+def get_avg_of_N_entries(filePath ,entries ,first = True ):
+    js = json.load(open(filePath))
+    df = pandas.DataFrame(js['memory_usage'])
+    sum=0
+    if(first):
+        for i in range(0,entries):
+            sum=sum+df.at[i,1]
+    else:
+        for i in range(df.__len__()-1 , df.__len__() -entries-1 , -1) :
+            sum = sum+df.at[i,1]
+    return sum/entries
+
+
