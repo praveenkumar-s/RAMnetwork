@@ -53,8 +53,11 @@ def getProcess_list():
 def get_pid(process_name, latest = True):
     pids=[]
     for proc in psutil.process_iter():
-        if(process_name in proc.name()):
-            pids.append(proc.pid)
+        try:
+            if(process_name in proc.name()):
+                pids.append(proc.pid)
+        except(psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
+            pass
     if(pids.__len__()==0):
         return -1 # return -1 if a process is not found
     elif(latest):
@@ -69,7 +72,7 @@ def customJsonDecoder(dictVar):
 
 def start_monitoring(process_id , id , polling_interval):
     CONFIG = json.load(open('client_config.json'))
-    if(path.abspath(__file__).endswith('.exe')):
+    if(CONFIG['mode']=='exe'):
         cmd_str = 'memory_monitoring_thread.exe -p {0} -i {1} -d {2} -t {3}'.format(process_id , id , CONFIG['memory_log_directory'], polling_interval)
     else:
         cmd_str = 'python memory_monitoring_thread.py -p {0} -i {1} -d {2} -t {3}'.format(process_id, id , CONFIG['memory_log_directory'] ,polling_interval )   
@@ -78,6 +81,7 @@ def start_monitoring(process_id , id , polling_interval):
     try:
         # proc = subprocess.Popen(cmd_str, shell=True,
         #         stdin=None, stdout=None, stderr=None, close_fds=True ,cwd= path.dirname(path.abspath(__file__)))
+        logging.info("Sub Process HandOvercommand: "+ cmd_str)
         proc = subprocess.Popen(cmd_str, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, stdin=subprocess.PIPE)
         logging.info("Process started successfully .."+ str(proc.pid))
     except Exception as e :
