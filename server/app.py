@@ -123,6 +123,35 @@ def getStats(id):
         return "given id: {0} is not found".format(id), 404
     return jsonify( utils.getStats(fileName) )
 
+
+"""
+{
+    "start_frequency":10,
+    "end_frequency":10,
+    "difference_limit":5
+}
+Validates that the avg memory for last 10 minutes ( intervals ) is less than or equal to 5x the avg memory during the first 10 minutes
+"""
+@app.route("/api/<id>/validate", methods = ['POST'])
+def valdiate(id):
+    fileName = path.join(CONFIG.datastore , id+'.json')
+    if(not path.exists(fileName)):
+        return "given id: {0} is not found".format(id), 404
+    req_body = request.get_json()
+    start_frequency = req_body["start_frequency"]
+    end_frequency = req_body["end_frequency"]
+    diffrence_limit = req_body["difference_limit"]
+    startAvg = utils.get_avg_of_N_entries(fileName , start_frequency )
+    endAvg = utils.get_avg_of_N_entries(fileName , end_frequency , False)
+    result = startAvg * diffrence_limit > endAvg
+    return jsonify({
+        "avg_start_memory":startAvg,
+        "avg_end_memory":endAvg,
+        "validationStatus": str(result)
+    })
+
+
+
 @app.route('/sendcustomEvent', methods=['GET'])
 def sendnew():
     q = request.args.get('event')
