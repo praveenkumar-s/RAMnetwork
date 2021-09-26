@@ -24,6 +24,7 @@ format='%(asctime)s | %(name)s | %(levelname)s | %(message)s')
 @sio.event
 def connect():
     print(utils.print_status(hostname , server , "connected"))
+    sio.emit('connection_information',{"hostName":hostname})
     sio.emit('login', {'userKey': 'streaming_api_key'})
 
 @sio.event

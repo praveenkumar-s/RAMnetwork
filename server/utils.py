@@ -1,4 +1,5 @@
 from collections import namedtuple
+from datetime import datetime
 import json
 import pandas
 
@@ -25,3 +26,36 @@ def getStats(filePath):
         }
     }
     return out
+
+def getIndexOfObject(Arr:list , key , value):
+    
+    for items in Arr:
+        if(items[key]==value):
+            return Arr.index(items)
+    return -1
+
+def addToActiveClient(Arr:list , vmName, id , processName ):
+    index = getIndexOfObject(Arr, 'hostName', vmName)
+    if(index != -1):
+        if(Arr[index].get('monitoring') == None):
+            Arr[index]['monitoring']=[]
+        Arr[index]['monitoring'].append({
+            'id': id, 
+            'processName':processName,
+            'startedAt': str(datetime.now())
+        })
+    return Arr
+
+def removeFromActiveClient(Arr:list , vmName,  id ):
+    try:
+        index = getIndexOfObject(Arr, 'hostName', vmName)
+        if(index != -1):
+            for items in Arr[index]['monitoring']:
+                if(items['id'] == id ):
+                    idx = Arr[index]['monitoring'].index(items)
+                    del Arr[index]['monitoring'][idx]
+        return True
+    except:
+        print("Failure in updating ACTIVE CLIENTS")
+        return False    
+

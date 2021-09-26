@@ -27,6 +27,7 @@ CONFIG = json.load(open('server_config.json', 'r'),
 CACHE = cachehelper.CacheProvider(
     CONFIG.redis_cache.server, CONFIG.redis_cache.port)
 
+ACTIVE_CLIENTS = []
 
 @app.route('/')
 def index():
@@ -78,6 +79,8 @@ def startMonitoring(vm_name):
     msg['params']=json_d
     socketio.emit(vm_name, json.dumps(msg))
     response = CACHE.getCachedJsonWithRetry(id , 10)
+    if(response['status'] != 'FAIL'):
+        utils.addToActiveClient(ACTIVE_CLIENTS , vm_name , id , json_d.get('process_name'))
     return jsonify({
         "id":id,
         "status": response['status'],
@@ -90,6 +93,7 @@ def stopMonitoring(vm_name):
     json_data = request.get_json()
     try:
         assert(json_data.get('id') != None)
+        utils.removeFromActiveClient(ACTIVE_CLIENTS , vm_name , json_data.get('id'))
     except:
         return "error: "+sys.exc_info() , 400
     
@@ -156,5 +160,24 @@ def datastoreUI(id):
     else:
         return "file not found",404
     return render_template('Result.html',tool_name="{0} | {1}".format(js["hostname"] ,js["process_name"]),tm_data=js["memory_usage"])
+
+
+@app.route('/ui/activeclients', methods = ['GET'])
+def showActiveClients():
+    return jsonify(ACTIVE_CLIENTS)
+###### Socket IO events
+
+@socketio.on('connection_information')
+def doOnConnect(data):
+    if(utils.getIndexOfObject(ACTIVE_CLIENTS,'hostName', data['hostName']) == -1):
+        ACTIVE_CLIENTS.append(data)
+    print("Some One connected")
+
+@socketio.on('disconnect')
+def doOnDisconnect():
+    print("Someone disconnected!")
+#######
+
+
 if __name__ == '__main__':
     socketio.run(app,  host=CONFIG.bind_host, port=CONFIG.bind_port)
